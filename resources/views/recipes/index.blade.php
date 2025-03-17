@@ -1,30 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    @foreach ($recipes as $recipe)
-        <h2>{{$recipe->name}}</h2>
-        <p>{{$recipe->description}}</p>
-        <img src="{{Storage::url($recipe->image_path)}}" style="width: 200px; height: auto;">
-
-        <form action="/recipe/{{$recipe->id}}/edit" method="post">
-            @csrf
-            <button>Edit</button>
-        </form>
-        <form action="/recipe/{{$recipe->id}}" method="post">
-            @csrf
-            @method('DELETE')
-            <button>Delete</button>
-        </form>
-    @endforeach
-
-    <form action="/recipe/create" method="get">
-        <button>Make recipe</button>
-    </form>
-</body>
-</html>
+<x-app-layout>
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-6 px-6 pt-2">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
+                @foreach ($recipes as $recipe)
+                    <div class="bg-gray-100 p-4 rounded-lg shadow-lg">
+                        <a href="{{ route('show', $recipe->id) }}">
+                            <img src="{{ Storage::url($recipe->image_path) }}" class="w-full h-48 object-cover rounded-md">
+                        </a>
+                        <h3 class="text-xl font-bold mt-2">{{ $recipe->name }}</h3>
+                        <p class="text-gray-700 mt-1">{{ $recipe->description }}</p>
+                        
+                        <a href="{{ route('show', $recipe->id) }}" class="mt-4 block text-center bg-blue-500 text-white px-4 py-2 rounded">See More</a>
+                    </div>
+                @endforeach
+            </div>
+            
+            <form action="/recipe/create" method="get" class="mt-6">
+                <button class="text-white px-4 py-2 rounded bg-blue-500">Make Recipe</button>
+            </form>
+        </div>
+    </div>
+</x-app-layout>

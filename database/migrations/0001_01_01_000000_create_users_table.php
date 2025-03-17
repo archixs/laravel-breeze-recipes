@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('usertype')->default('user');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
@@ -35,6 +36,25 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        DB::table('users')->insert([
+            [
+                'name' => 'Arturs',
+                'email' => 'arturshugo4@gmail.com',
+                'usertype' => 'user',
+                'password' => Hash::make('11111111'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Admin',
+                'email' => 'admin@gmail.com',
+                'usertype' => 'admin',
+                'password' => Hash::make('admin'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
     }
 
     /**
