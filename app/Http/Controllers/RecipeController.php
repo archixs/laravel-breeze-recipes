@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recipe;
-use Illuminate\Container\Attributes\Storage;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
-use Laravel\Pail\ValueObjects\Origin\Console;
 
 class RecipeController extends Controller
 {
@@ -33,6 +32,8 @@ class RecipeController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'category' => 'required|string',
+            'ingredients' => 'required|string',
+            'steps' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
@@ -42,15 +43,16 @@ class RecipeController extends Controller
             $path = null;
         }
 
-    Recipe::create([
-        'name' => $request->name,
-        'description' => $request->description,
-        'category' => $request->category,
-        'image_path' => $path,
-    ]);
+        $request->user()->recipes()->create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'category' => $request->category,
+            'image_path' => $path,
+            'ingredients' => $request->ingredients,
+            'steps' => $request->steps
+        ]);
 
-    return redirect('/recipe');
-
+        return redirect('/recipe');
     }
 
     public function update(Request $request, $id){
@@ -58,21 +60,28 @@ class RecipeController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'category' => 'required|string',
+            'ingredients' => 'required|string',
+            'steps' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $rec = Recipe::find($id);
+        $recipe = Recipe::find($id);
 
-        if($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
+            if ($recipe->image_path) {
+                Storage::disk('public')->delete($recipe->image_path); // Delete old image
+            }
             $path = $request->file('image')->store('images', 'public');
         } else {
-            $path = $rec->image_path;
+            $path = $recipe->image_path;
         }
         
-        $rec->update([
+        $recipe->update([
             'name' => $request->name,
             'description' => $request->description,
             'category' => $request->category,
+            'ingredients' => $request->ingredients,
+            'steps' => $request->steps,
             'image_path' => $path
         ]);
 
@@ -82,6 +91,9 @@ class RecipeController extends Controller
 
     public function destroy($id) {
         $recipe = Recipe::find($id);
+        if ($recipe->image_path) {
+            Storage::disk('public')->delete($recipe->image_path);
+        }
         $recipe->delete();
 
         return redirect('/recipe');

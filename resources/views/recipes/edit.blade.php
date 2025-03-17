@@ -16,12 +16,14 @@
                     
                     <div class="mb-4">
                         <label for="name" class="block text-gray-700">Name</label>
-                        <input type="text" name="name" id="name" value="{{ $recipe->name }}" class="w-full p-2 border border-gray-300 rounded mt-1">
+                        <input type="text" name="name" id="name" value="{{ $recipe->name }}" 
+                               class="w-full p-2 border border-gray-300 rounded mt-1" required>
                     </div>
 
                     <div class="mb-4">
                         <label for="description" class="block text-gray-700">Description</label>
-                        <textarea name="description" id="description" class="w-full p-2 border border-gray-300 rounded mt-1">{{ $recipe->description }}</textarea>
+                        <textarea name="description" id="description" 
+                                  class="w-full p-2 border border-gray-300 rounded mt-1" required>{{ $recipe->description }}</textarea>
                     </div>
 
                     <div class="mb-4">
@@ -34,12 +36,25 @@
                     </div>
 
                     <div class="mb-4">
+                        <label for="ingredients" class="block text-gray-700">Ingredients</label>
+                        <textarea name="ingredients" id="ingredients" 
+                                  class="w-full p-2 border border-gray-300 rounded mt-1" required>{{ $recipe->ingredients }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="steps" class="block text-gray-700">Steps</label>
+                        <textarea name="steps" id="steps" 
+                                  class="w-full p-2 border border-gray-300 rounded mt-1" required>{{ $recipe->steps }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
                         <label for="image" class="block text-gray-700">Image</label>
                         <input type="file" name="image" id="image" class="w-full p-2 border border-gray-300 rounded mt-1">
                     </div>
 
                     <div class="mb-4">
-                        <img src="{{ Storage::url($recipe->image_path) }}" class="w-full h-64 object-cover rounded-md">
+                        <img src="{{ $recipe->image_path ? Storage::url($recipe->image_path) : asset('images/default-recipe.jpg') }}" 
+                             class="w-full h-64 object-cover rounded-md">
                     </div>
                     
                     <div class="mt-6 flex space-x-4">
