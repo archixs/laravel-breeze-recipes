@@ -10,7 +10,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-6 p-6">
                 <h2 class="font-semibold text-lg text-gray-800">Create a Recipe</h2>
 
-                <form action="/recipe" method="POST" enctype="multipart/form-data" class="mt-4 space-y-4">
+                <form action="/" method="POST" enctype="multipart/form-data" class="mt-4 space-y-4">
                     @csrf
                     
                     <div>
@@ -26,9 +26,9 @@
                     <div>
                         <label for="category" class="block text-gray-700">Category</label>
                         <select name="category" id="category" required class="w-full border-gray-300 rounded-lg p-2">
-                            <option value="latvian">Latvian</option>
-                            <option value="chinese">Chinese</option>
-                            <option value="american">American</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -44,7 +44,7 @@
 
                     <div>
                         <label for="image" class="block text-gray-700">Image</label>
-                        <input type="file" name="image" id="image" required class="w-full border-gray-300 rounded-lg p-2">
+                        <input type="file" name="image" id="image" class="w-full border-gray-300 rounded-lg p-2">
                     </div>
 
                     <button type="submit" class="text-white px-4 py-2 rounded-lg bg-blue-500">Save Recipe</button>

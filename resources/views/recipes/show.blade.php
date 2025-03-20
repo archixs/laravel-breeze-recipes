@@ -15,7 +15,7 @@
                 </p>
 
                 <p class="text-gray-600 mt-1">
-                    Category: <span class="font-semibold">{{ $recipe->category }}</span>
+                    Category: <span class="font-semibold">{{ $recipe->category->name ?? 'Uncategorized' }}</span>
                 </p>
 
                 <img src="{{ $recipe->image_path ? Storage::url($recipe->image_path) : asset('images/default-recipe.jpg') }}" 
@@ -45,8 +45,7 @@
                     @if(auth()->user()->usertype === 'admin' || $recipe->user_id === auth()->user()->id)
                         <a href="{{ route('edit', $recipe->id) }}" class="px-4 py-2 bg-yellow-500 text-white rounded">Edit</a>
 
-                        <form action="{{ route('delete', $recipe->id) }}" method="POST" 
-                              onsubmit="return confirm('Are you sure you want to delete this recipe?');">
+                        <form action="{{ route('delete', $recipe->id) }}" method="POST" >
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded">Delete</button>

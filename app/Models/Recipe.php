@@ -11,11 +11,15 @@ class Recipe extends Model
         'description',
         'ingredients',
         'steps',
-        'category',
+        'category_id',
         'image_path'
     ];
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    public function category() {
+        return $this->belongsTo(RecipeCategory::class);
     }
 }

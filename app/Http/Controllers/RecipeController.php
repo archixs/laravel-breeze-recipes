@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recipe;
+use App\Models\RecipeCategory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
@@ -14,24 +15,26 @@ class RecipeController extends Controller
     }
 
     public function create() {
-        return view('recipes.create');
+        $categories = RecipeCategory::all();
+        return view('recipes.create', ['categories' => $categories]);
     }
 
     public function show($id) {
         $recipe = Recipe::find($id);
-        return view('recipes.show', compact('recipe'));
+        return view('recipes.show', ['recipe' => $recipe]);
     }
 
     public function edit($id) {
         $recipe = Recipe::find($id);
-        return view('recipes.edit', ['recipe' => $recipe]);
+        $categories = RecipeCategory::all();
+        return view('recipes.edit', ['recipe' => $recipe, 'categories' => $categories]);
     }
 
     public function save(Request $request){
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'category' => 'required|string',
+            'category' => 'required|integer',
             'ingredients' => 'required|string',
             'steps' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
@@ -46,20 +49,20 @@ class RecipeController extends Controller
         $request->user()->recipes()->create([
             'name' => $request->name,
             'description' => $request->description,
-            'category' => $request->category,
+            'category_id' => $request->category,
             'image_path' => $path,
             'ingredients' => $request->ingredients,
             'steps' => $request->steps
         ]);
 
-        return redirect('/recipe');
+        return redirect('/');
     }
 
     public function update(Request $request, $id){
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'category' => 'required|string',
+            'category' => 'required|integer',
             'ingredients' => 'required|string',
             'steps' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
@@ -69,24 +72,25 @@ class RecipeController extends Controller
 
         if ($request->hasFile('image')) {
             if ($recipe->image_path) {
-                Storage::disk('public')->delete($recipe->image_path); // Delete old image
+                Storage::disk('public')->delete($recipe->image_path);
             }
             $path = $request->file('image')->store('images', 'public');
         } else {
             $path = $recipe->image_path;
         }
         
+        
         $recipe->update([
             'name' => $request->name,
             'description' => $request->description,
-            'category' => $request->category,
+            'category_id' => $request->category,
             'ingredients' => $request->ingredients,
             'steps' => $request->steps,
             'image_path' => $path
         ]);
 
 
-        return redirect('/recipe');
+        return redirect('/');
     }
 
     public function destroy($id) {
@@ -96,6 +100,6 @@ class RecipeController extends Controller
         }
         $recipe->delete();
 
-        return redirect('/recipe');
+        return redirect('/');
     }
 }

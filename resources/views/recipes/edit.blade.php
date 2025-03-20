@@ -29,9 +29,12 @@
                     <div class="mb-4">
                         <label for="category" class="block text-gray-700">Category</label>
                         <select name="category" id="category" class="w-full p-2 border border-gray-300 rounded mt-1">
-                            <option value="latvian" {{ $recipe->category == 'latvian' ? 'selected' : '' }}>Latvian</option>
-                            <option value="chinese" {{ $recipe->category == 'chinese' ? 'selected' : '' }}>Chinese</option>
-                            <option value="american" {{ $recipe->category == 'american' ? 'selected' : '' }}>American</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" 
+                                    @if($recipe->category_id == $category->id) selected @endif>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach 
                         </select>
                     </div>
 

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description');
             $table->text('ingredients');
             $table->longText('steps');
-            $table->string('category');
+            $table->foreignId('category_id')->constrained('recipe_categories')->nullOnDelete();
             $table->string('image_path')->nullable();
             $table->timestamps();
         });
@@ -31,7 +31,7 @@ return new class extends Migration
                 'ingredients' => 'Spaghetti, eggs, pancetta, Parmesan cheese, black pepper, salt.',
                 'steps' => '1. Boil pasta. 2. Fry pancetta. 3. Mix eggs and cheese. 4. Combine everything.',
                 'user_id' => 2,
-                'category' => 'Pasta',
+                'category_id' => 1, // Pasta
                 'image_path' => 'demo/carbonara.jpg',
             ],
             [
@@ -40,7 +40,7 @@ return new class extends Migration
                 'ingredients' => 'Pizza dough, tomato sauce, mozzarella cheese, fresh basil, olive oil.',
                 'steps' => '1. Roll out dough. 2. Spread sauce. 3. Add cheese and basil. 4. Bake at 220°C for 10-12 mins.',
                 'user_id' => 2,
-                'category' => 'Pizza',
+                'category_id' => 2, // Pizza
                 'image_path' => 'demo/margherita.jpg',
             ],
             [
@@ -49,7 +49,7 @@ return new class extends Migration
                 'ingredients' => 'Romaine lettuce, croutons, Parmesan cheese, Caesar dressing, black pepper.',
                 'steps' => '1. Chop lettuce. 2. Add croutons and Parmesan. 3. Drizzle dressing and mix.',
                 'user_id' => 2,
-                'category' => 'Salad',
+                'category_id' => 3, // Salad
                 'image_path' => 'demo/caesar.jpg',
             ],
             [
@@ -58,7 +58,7 @@ return new class extends Migration
                 'ingredients' => 'Onions, beef broth, butter, French bread, Gruyère cheese.',
                 'steps' => '1. Caramelize onions. 2. Add broth and simmer. 3. Top with bread and cheese, then broil.',
                 'user_id' => 2,
-                'category' => 'Soup',
+                'category_id' => 4, // Soup
                 'image_path' => 'demo/french_onion.jpg',
             ],
             [
@@ -67,7 +67,7 @@ return new class extends Migration
                 'ingredients' => 'Chicken, yogurt, tomato sauce, cream, garam masala, garlic, ginger.',
                 'steps' => '1. Marinate chicken. 2. Grill chicken. 3. Cook sauce. 4. Combine and simmer.',
                 'user_id' => 2,
-                'category' => 'Indian',
+                'category_id' => 5, // Indian
                 'image_path' => 'demo/tikka_masala.jpg',
             ],
             [
@@ -76,7 +76,7 @@ return new class extends Migration
                 'ingredients' => 'Flour, cocoa powder, sugar, eggs, butter, baking powder, milk.',
                 'steps' => '1. Mix ingredients. 2. Bake at 180°C for 30-35 mins. 3. Let cool and frost.',
                 'user_id' => 2,
-                'category' => 'Dessert',
+                'category_id' => 6, // Dessert
                 'image_path' => 'demo/chocolate_cake.jpg',
             ],
         ]);
@@ -89,4 +89,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('recipes');
     }
+
 };
