@@ -9,8 +9,21 @@ use Illuminate\Http\Request;
 
 class RecipeController extends Controller
 {
-    public function index(){
-        $recipes = Recipe::all();
+    public function index(Request $request){
+        $query = Recipe::query();
+        
+        // Filter by search
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter by category
+        if ($request->has('category') && !empty($request->category)) {
+            $query->where('category_id', $request->category);
+        }
+    
+        $recipes = $query->paginate(9);
+
         return view('recipes.index', ['recipes' => $recipes]);
     }
 

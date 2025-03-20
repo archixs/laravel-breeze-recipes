@@ -6,10 +6,10 @@ use App\Models\RecipeCategory;
 use Illuminate\Support\ServiceProvider;
 use View;
 
-class AppServiceProvider extends ServiceProvider
+class ViewServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register services.
      */
     public function register(): void
     {
@@ -17,10 +17,12 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap services.
      */
     public function boot(): void
     {
-        View::share('categories', RecipeCategory::all());
+        // View::composer('layouts.navigation', function ($view) {
+        //     $view->with('categories', RecipeCategory::all());
+        // });
     }
 }
