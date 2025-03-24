@@ -43,6 +43,11 @@ class RecipeController extends Controller
         return view('recipes.edit', ['recipe' => $recipe, 'categories' => $categories]);
     }
 
+    public function myrecipes() {
+        $recipes = auth()->user()->recipes()->paginate(9);
+        return view('recipes.myrecipes', ['recipes' => $recipes]);
+    }
+
     public function save(Request $request){
         $request->validate([
             'name' => 'required|string|max:255',

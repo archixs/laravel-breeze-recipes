@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/recipe/{id}', [RecipeController::class, 'update'])->name('update');
     Route::delete('/recipe/{id}', [RecipeController::class, 'destroy'])->name('delete');
     Route::get('/recipe/{id}/show', [RecipeController::class, 'show'])->name('show');
+    Route::get('/recipe/myrecipes', [RecipeController::class, 'myrecipes'])->name('myrecipes');
 });
 
 require __DIR__.'/auth.php';

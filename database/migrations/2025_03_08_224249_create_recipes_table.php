@@ -131,7 +131,7 @@ return new class extends Migration
                 'steps' => "Mash avocados.\nStir in lime juice and seasonings.\nMix in chopped onion and tomato.",
                 'user_id' => 2,
                 'category_id' => 3,
-                'image_path' => 'demo/guacamole.jpg',
+                'image_path' => 'demo/guacamole.jpeg',
             ],
             [
                 'name' => 'Lasagna',
@@ -158,7 +158,7 @@ return new class extends Migration
                 'steps' => "Slice tomatoes and mozzarella.\nLayer with basil leaves.\nDrizzle with olive oil and balsamic glaze.\nSeason with salt and pepper.",
                 'user_id' => 2,
                 'category_id' => 3,
-                'image_path' => 'demo/caprese_salad.jpg',
+                'image_path' => 'demo/caprese_salad.jpeg',
             ],
             [
                 'name' => 'Stuffed Bell Peppers',
@@ -167,7 +167,7 @@ return new class extends Migration
                 'steps' => "Cut and hollow out peppers.\nMix filling ingredients.\nStuff peppers and bake until tender.",
                 'user_id' => 2,
                 'category_id' => 1,
-                'image_path' => 'demo/stuffed_peppers.jpg',
+                'image_path' => 'demo/stuffed_peppers.avif',
             ],
             [
                 'name' => 'Chicken Alfredo',
@@ -203,7 +203,7 @@ return new class extends Migration
                 'steps' => "Prepare the crust.\nMix apple filling.\nAssemble pie and bake.\nLet cool before serving.",
                 'user_id' => 2,
                 'category_id' => 6,
-                'image_path' => 'demo/apple_pie.jpg',
+                'image_path' => 'demo/apple_pie.jpeg',
             ],
             [
                 'name' => 'Chili Con Carne',
@@ -230,7 +230,7 @@ return new class extends Migration
                 'steps' => "Marinate pork.\nGrill and slice.\nServe in tortillas with toppings.",
                 'user_id' => 2,
                 'category_id' => 5,
-                'image_path' => 'demo/tacos_al_pastor.jpg',
+                'image_path' => 'demo/tacos_al_pastor.jpeg',
             ],
             [
                 'name' => 'Clam Chowder',

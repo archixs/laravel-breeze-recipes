@@ -11,6 +11,10 @@
                 <x-nav-link :href="route('index')" :active="request()->routeIs('index')" class="text-gray-600 hover:text-gray-900">
                     {{ __('Recipes') }}
                 </x-nav-link>
+
+                <x-nav-link :href="route('myrecipes')" :active="request()->routeIs('myrecipes')" class="text-gray-600 hover:text-gray-900">
+                    {{ __('My recipes') }}
+                </x-nav-link>
             </div>
 
             <!-- Center Section (Category Dropdown & Search Bar) -->
