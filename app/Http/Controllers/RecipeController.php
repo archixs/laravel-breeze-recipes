@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rating;
 use App\Models\Recipe;
 use App\Models\RecipeCategory;
 use Illuminate\Support\Facades\Storage;
@@ -34,6 +35,8 @@ class RecipeController extends Controller
 
     public function show($id) {
         $recipe = Recipe::find($id);
+        $recipe->user_rating = $recipe->ratings()->where('user_id', auth()->id())->value('rating') ?? 0;
+        $recipe->average_rating = $recipe->ratings()->avg('rating') ?? 0;
         return view('recipes.show', ['recipe' => $recipe]);
     }
 
@@ -119,5 +122,24 @@ class RecipeController extends Controller
         $recipe->delete();
 
         return redirect('/');
+    }
+
+    public function rate(Request $request, Recipe $recipe)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+
+        // Save or update the rating
+        $recipe->ratings()->updateOrCreate(
+            ['user_id' => auth()->id()], 
+            ['rating' => $request->rating]
+        );
+
+        // Recalculate the average rating
+        $average = $recipe->ratings()->avg('rating');
+        $recipe->update(['average_rating' => $average]);
+
+        return response()->json(['average_rating' => round($average, 1)]);
     }
 }

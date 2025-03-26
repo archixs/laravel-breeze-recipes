@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
             
-            <!-- Left Section (Logo & Navigation Links) -->
+            <!-- Logo & Navigation Links -->
             <div class="flex items-center space-x-6">
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
                     <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
@@ -17,7 +17,7 @@
                 </x-nav-link>
             </div>
 
-            <!-- Center Section (Category Dropdown & Search Bar) -->
+            <!-- Category Dropdown & Search Bar -->
             <div class="flex items-center space-x-4">
                 <!-- Category Dropdown -->
                 <form action="{{ route('index') }}" method="GET" id="category-form" class="flex items-center">
@@ -31,7 +31,7 @@
                     </select>
                 </form>
 
-                <!-- Search Bar -->
+                <!-- Search -->
                 <form action="{{ route('index') }}" method="GET" class="flex items-center space-x-2">
                     <input 
                         type="text" 

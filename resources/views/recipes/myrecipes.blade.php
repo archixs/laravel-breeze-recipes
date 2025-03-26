@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="mt-6">
-                    {{ $recipes->links() }} <!-- Pagination -->
+                    {{ $recipes->links() }}
                 </div>
 
                 <form action="/" method="get" class="mt-6 mb-6">

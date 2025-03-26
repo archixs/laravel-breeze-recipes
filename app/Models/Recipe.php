@@ -22,4 +22,12 @@ class Recipe extends Model
     public function category() {
         return $this->belongsTo(RecipeCategory::class);
     }
+
+    public function ratings() {
+        return $this->hasMany(Rating::class);
+    }
+    public function averageRating()
+    {
+        return $this->ratings()->avg('rating');
+    }
 }
