@@ -34,14 +34,14 @@ class RecipeController extends Controller
     }
 
     public function show($id) {
-        $recipe = Recipe::find($id);
+        $recipe = Recipe::findOrFail($id);
         $recipe->user_rating = $recipe->ratings()->where('user_id', auth()->id())->value('rating') ?? 0;
         $recipe->average_rating = $recipe->ratings()->avg('rating') ?? 0;
         return view('recipes.show', ['recipe' => $recipe]);
     }
 
     public function edit($id) {
-        $recipe = Recipe::find($id);
+        $recipe = Recipe::findOrFail($id);
         $categories = RecipeCategory::all();
         return view('recipes.edit', ['recipe' => $recipe, 'categories' => $categories]);
     }
@@ -62,7 +62,11 @@ class RecipeController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('images', 'public');
+            try {
+                $path = $request->file('image')->store('images', 'public');
+            } catch (\Exception $e) {
+                return back()->withErrors(['image' => 'Failed to upload image. Please try again.']);
+            }
         } else {
             $path = null;
         }
@@ -76,7 +80,7 @@ class RecipeController extends Controller
             'steps' => $request->steps
         ]);
 
-        return redirect('/');
+        return redirect()->route('index')->with('success', 'Recipe created successfully!');
     }
 
     public function update(Request $request, $id){
@@ -89,13 +93,17 @@ class RecipeController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        $recipe = Recipe::find($id);
+        $recipe = Recipe::findOrFail($id);
 
         if ($request->hasFile('image')) {
-            if ($recipe->image_path) {
-                Storage::disk('public')->delete($recipe->image_path);
+            try {
+                if ($recipe->image_path) {
+                    Storage::disk('public')->delete($recipe->image_path);
+                }
+                $path = $request->file('image')->store('images', 'public');
+            } catch (\Exception $e) {
+                return back()->withErrors(['image' => 'Failed to upload image. Please try again.']);
             }
-            $path = $request->file('image')->store('images', 'public');
         } else {
             $path = $recipe->image_path;
         }
@@ -110,18 +118,21 @@ class RecipeController extends Controller
             'image_path' => $path
         ]);
 
-
-        return redirect('/');
+        return redirect()->route('show', $recipe->id)->with('success', 'Recipe updated successfully!');
     }
 
     public function destroy($id) {
-        $recipe = Recipe::find($id);
-        if ($recipe->image_path) {
-            Storage::disk('public')->delete($recipe->image_path);
+        $recipe = Recipe::findOrFail($id);
+        
+        try {
+            if ($recipe->image_path) {
+                Storage::disk('public')->delete($recipe->image_path);
+            }
+            $recipe->delete();
+            return redirect()->route('index')->with('success', 'Recipe deleted successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('index')->withErrors(['error' => 'Failed to delete recipe. Please try again.']);
         }
-        $recipe->delete();
-
-        return redirect('/');
     }
 
     public function rate(Request $request, Recipe $recipe)
@@ -138,7 +149,6 @@ class RecipeController extends Controller
 
         // Recalculate the average rating
         $average = $recipe->ratings()->avg('rating');
-        $recipe->update(['average_rating' => $average]);
 
         return response()->json(['average_rating' => round($average, 1)]);
     }

@@ -12,7 +12,8 @@ class Recipe extends Model
         'ingredients',
         'steps',
         'category_id',
-        'image_path'
+        'image_path',
+        'user_id'
     ];
 
     public function user(){
