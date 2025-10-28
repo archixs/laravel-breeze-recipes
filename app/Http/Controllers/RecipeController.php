@@ -152,4 +152,8 @@ class RecipeController extends Controller
 
         return response()->json(['average_rating' => round($average, 1)]);
     }
+
+    public function toAI() {
+        return view('recipes.ai-page');
+    }
 }

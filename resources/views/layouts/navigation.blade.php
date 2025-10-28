@@ -15,6 +15,10 @@
                 <x-nav-link :href="route('myrecipes')" :active="request()->routeIs('myrecipes')" class="text-gray-600 hover:text-gray-900">
                     {{ __('My recipes') }}
                 </x-nav-link>
+
+                <x-nav-link :href="route('ai-page')" :active="request()->routeIs('ai-page')" class="text-gray-600 hover:text-gray-900">
+                    {{ __('My AI') }}
+                </x-nav-link>
             </div>
 
             <!-- Category Dropdown & Search Bar -->

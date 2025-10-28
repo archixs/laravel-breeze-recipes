@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/recipe/{id}/show', [RecipeController::class, 'show'])->name('show');
     Route::get('/recipe/myrecipes', [RecipeController::class, 'myrecipes'])->name('myrecipes');
     Route::post('/recipe/{recipe}/rate', [RecipeController::class, 'rate'])->name('rate');
+    Route::get('/recipe/ai', [RecipeController::class, 'toAI'])->name('ai-page');
+    Route::post('/chat', ChatController::class);
 });
 
 require __DIR__.'/auth.php';
