@@ -16,27 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->timestamps();
         });
-
-        DB::table('recipe_categories')->insert([
-            ['name' => 'Pasta'],
-            ['name' => 'Pizza'],
-            ['name' => 'Salad'],
-            ['name' => 'Soup'],
-            ['name' => 'Indian'],
-            ['name' => 'Dessert'],
-            ['name' => 'Seafood'],
-            ['name' => 'Vegetarian'],
-            ['name' => 'Grill & BBQ'],
-            ['name' => 'Breakfast'],
-            ['name' => 'Beverages'],
-            ['name' => 'Asian'],
-            ['name' => 'Mexican'],
-            ['name' => 'Vegan'],
-            ['name' => 'Fast Food'],
-            ['name' => 'Healthy'],
-            ['name' => 'Comfort Food'],
-            ['name' => 'Holiday Specials'],
-        ]);
     }
 
     /**
