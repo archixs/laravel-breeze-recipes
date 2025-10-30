@@ -1,12 +1,13 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-200 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
-            
+
             <!-- Logo & Navigation Links -->
             <div class="flex items-center space-x-6">
-                <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
-                    <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                <a href="{{ route('dashboard') }}" style="display: flex; align-items: center; gap: 8px;">
+                    <x-application-logo style="height: 80px; width: auto;" />
                 </a>
+
 
                 <x-nav-link :href="route('index')" :active="request()->routeIs('index')" class="text-gray-600 hover:text-gray-900">
                     {{ __('Recipes') }}
@@ -37,11 +38,11 @@
 
                 <!-- Search -->
                 <form action="{{ route('index') }}" method="GET" class="flex items-center space-x-2">
-                    <input 
-                        type="text" 
-                        name="search" 
-                        placeholder="Search recipes..." 
-                        value="{{ request('search') }}" 
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search recipes..."
+                        value="{{ request('search') }}"
                         class="border border-gray-300 p-2 rounded-lg w-48 sm:w-64 focus:ring focus:ring-blue-200"
                     >
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
