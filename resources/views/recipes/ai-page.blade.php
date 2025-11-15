@@ -33,10 +33,11 @@
 
         if (message === '') return;
 
+        // Show user message
         chatBox.innerHTML += `<div class='text-right text-blue-600 mt-2'>${message}</div>`;
         messageInput.value = '';
 
-        fetch("{{ route('ai-page') }}", {
+        fetch("{{ route('chat') }}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -46,7 +47,27 @@
         })
         .then(response => response.json())
         .then(data => {
+            // Show AI response
             chatBox.innerHTML += `<div class='text-left text-gray-600 mt-2'>${data.response}</div>`;
+
+            // Show recipe card if AI selected a recipe
+            if (data.recipe) {
+                chatBox.innerHTML += `
+                <div class="bg-gray-100 p-3 rounded-lg shadow-md mt-3 max-w-xs">
+                    <a href="/recipe/${data.recipe.id}/show">
+                        <img src="${data.recipe.image}" class="w-full h-28 object-cover rounded-md">
+                    </a>
+                    <h3 class="text-lg font-semibold mt-2">${data.recipe.name}</h3>
+                    <p class="text-gray-700 mt-1 text-sm">${data.recipe.description}</p>
+                    <a href="/recipe/${data.recipe.id}/show" 
+                    class="mt-3 block text-center bg-blue-500 text-white px-3 py-1 rounded text-sm">
+                        See More
+                    </a>
+                </div>
+                `;
+            }
+
+
             chatBox.scrollTop = chatBox.scrollHeight;
         })
         .catch(error => console.error('Error:', error));

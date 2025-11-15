@@ -191,7 +191,7 @@ class RecipeSeeder extends Seeder
                 'steps' => "Prepare the crust.\nMix apple filling.\nAssemble pie and bake.\nLet cool before serving.",
                 'user_id' => 2,
                 'category_id' => 6,
-                'image_path' => 'demo/apple_pie.jpeg',
+                'image_path' => 'demo/apple_pie.jpg',
             ],
             [
                 'name' => 'Chili Con Carne',

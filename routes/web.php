@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/recipe/myrecipes', [RecipeController::class, 'myrecipes'])->name('myrecipes');
     Route::post('/recipe/{recipe}/rate', [RecipeController::class, 'rate'])->name('rate');
     Route::get('/recipe/ai', [RecipeController::class, 'toAI'])->name('ai-page');
-    Route::post('/chat', ChatController::class);
+    Route::post('/chat', ChatController::class)->name('chat');
 });
 
 require __DIR__.'/auth.php';
