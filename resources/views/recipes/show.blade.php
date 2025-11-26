@@ -15,7 +15,14 @@
                 </p>
 
                 <p class="text-gray-600 mt-1">
-                    Category: <span class="font-semibold">{{ $recipe->category->name ?? 'Uncategorized' }}</span>
+                    Categories: 
+                    @if($recipe->categories && $recipe->categories->count())
+                        <span class="font-semibold">
+                            {{ $recipe->categories->pluck('name')->join(', ') }}
+                        </span>
+                    @else
+                        <span class="font-semibold">Uncategorized</span>
+                    @endif
                 </p>
 
                 <!-- Rating System -->

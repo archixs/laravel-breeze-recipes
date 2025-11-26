@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description');
             $table->text('ingredients');
             $table->longText('steps');
-            $table->foreignId('category_id')->constrained('recipe_categories')->nullOnDelete();
+            $table->foreignId('category_id')->nullable()->constrained('recipe_categories')->nullOnDelete();
             $table->string('image_path')->nullable();
             $table->timestamps();
         });

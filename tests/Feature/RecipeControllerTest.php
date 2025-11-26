@@ -98,7 +98,7 @@ test('user can create a new recipe using seeded category', function () {
     $data = [
         'name' => 'Seeded Test Recipe',
         'description' => 'Made from seeded data.',
-        'category' => $this->category->id,
+        'categories' => [$this->category->id],
         'ingredients' => 'Flour, Sugar, Eggs',
         'steps' => 'Mix everything together.',
         'image' => null,
@@ -121,7 +121,7 @@ test('user can update a recipe from seeded data', function () {
     $response = $this->actingAs($this->user)->put(route('update', $this->recipe->id), [
         'name' => 'Updated Seed Recipe',
         'description' => 'Updated seeded description.',
-        'category' => $this->category->id,
+        'categories' => $this->category->id,
         'ingredients' => 'New Ingredients',
         'steps' => 'New Steps',
     ]);

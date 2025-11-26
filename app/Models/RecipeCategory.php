@@ -9,6 +9,6 @@ class RecipeCategory extends Model
     protected $fillable = ['name'];
 
     public function recipe() {
-        return $this->hasMany(Recipe::class);
+        return $this->belongsToMany(Recipe::class);
     }
 }

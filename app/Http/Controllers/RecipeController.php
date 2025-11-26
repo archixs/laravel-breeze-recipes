@@ -20,7 +20,9 @@ class RecipeController extends Controller
 
         // Filter by category
         if ($request->has('category') && !empty($request->category)) {
-            $query->where('category_id', $request->category);
+            $query->whereHas('categories', function ($q) use ($request) {
+                $q->whereIn('recipe_categories.id', (array)$request->category);
+            });
         }
     
         $recipes = $query->paginate(9);
@@ -34,7 +36,7 @@ class RecipeController extends Controller
     }
 
     public function show($id) {
-        $recipe = Recipe::findOrFail($id);
+        $recipe = Recipe::with(['user', 'categories'])->findOrFail($id);
         $recipe->user_rating = $recipe->ratings()->where('user_id', auth()->id())->value('rating') ?? 0;
         $recipe->average_rating = $recipe->ratings()->avg('rating') ?? 0;
         return view('recipes.show', ['recipe' => $recipe]);
@@ -55,7 +57,7 @@ class RecipeController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'category' => 'required|integer',
+            'categories' => 'required',
             'ingredients' => 'required|string',
             'steps' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
@@ -71,14 +73,17 @@ class RecipeController extends Controller
             $path = null;
         }
 
-        $request->user()->recipes()->create([
+        $recipe = $request->user()->recipes()->create([
             'name' => $request->name,
             'description' => $request->description,
-            'category_id' => $request->category,
             'image_path' => $path,
             'ingredients' => $request->ingredients,
             'steps' => $request->steps
         ]);
+
+        $categories = is_string($request->categories) ? json_decode($request->categories, true) : $request->categories;
+
+        $recipe->categories()->sync($categories);   
 
         return redirect()->route('index')->with('success', 'Recipe created successfully!');
     }
@@ -87,7 +92,7 @@ class RecipeController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'category' => 'required|integer',
+            'categories' => 'required', // JSON list
             'ingredients' => 'required|string',
             'steps' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
@@ -107,16 +112,19 @@ class RecipeController extends Controller
         } else {
             $path = $recipe->image_path;
         }
-        
-        
+
+        // Update recipe
         $recipe->update([
             'name' => $request->name,
             'description' => $request->description,
-            'category_id' => $request->category,
             'ingredients' => $request->ingredients,
             'steps' => $request->steps,
             'image_path' => $path
         ]);
+
+        $categories = is_string($request->categories) ? json_decode($request->categories, true) : $request->categories;
+
+        $recipe->categories()->sync($categories);
 
         return redirect()->route('show', $recipe->id)->with('success', 'Recipe updated successfully!');
     }

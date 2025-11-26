@@ -26,16 +26,22 @@
                                   class="w-full p-2 border border-gray-300 rounded mt-1" required>{{ $recipe->description }}</textarea>
                     </div>
 
-                    <div class="mb-4">
-                        <label for="category" class="block text-gray-700">Category</label>
-                        <select name="category" id="category" class="w-full p-2 border border-gray-300 rounded mt-1">
+                    <div id="category-wrapper" class="mb-4">
+                        <label class="block text-gray-700 mb-1">Categories</label>
+
+                        <!-- Hidden input where selected category IDs will be stored -->
+                        <input type="hidden" name="categories" id="categoriesInput">
+
+                        <!-- The dropdown -->
+                        <select id="categorySelect" class="w-full border-gray-300 rounded-lg p-2">
+                            <option value="">Select category…</option>
                             @foreach($categories as $category)
-                                <option value="{{ $category->id }}" 
-                                    @if($recipe->category_id == $category->id) selected @endif>
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach 
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
                         </select>
+
+                        <!-- Tags appear here -->
+                        <div id="categoryTags" class="flex flex-wrap gap-2 mt-3"></div>
                     </div>
 
                     <div class="mb-4">
@@ -69,3 +75,50 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+    let selected = @json($recipe->categories->map(fn($c) => ['id' => $c->id, 'name' => $c->name]));
+
+    const select = document.getElementById('categorySelect');
+    const tagsDiv = document.getElementById('categoryTags');
+    const input = document.getElementById('categoriesInput');
+
+    function updateTags() {
+        input.value = JSON.stringify(selected.map(c => c.id));
+        tagsDiv.innerHTML = "";
+
+        selected.forEach(cat => {
+            const tag = document.createElement('span');
+            tag.className = "bg-blue-200 text-blue-800 px-3 py-1 rounded-full flex items-center";
+            tag.innerHTML = `
+                ${cat.name}
+                <button type="button" class="ml-2 text-red-600 font-bold"
+                    onclick="removeCategory('${cat.id}')">×</button>
+            `;
+            tagsDiv.appendChild(tag);
+        });
+    }
+
+    function removeCategory(id) {
+        selected = selected.filter(cat => cat.id != id);
+        updateTags();
+    }
+
+    select.addEventListener('change', function() {
+        const id = this.value;
+        if (!id) return;
+
+        const name = this.options[this.selectedIndex].text;
+        if (selected.some(cat => cat.id == id)) {
+            this.value = "";
+            return;
+        }
+
+        selected.push({ id, name });
+        updateTags();
+        this.value = "";
+    });
+
+    // Initialize tags on page load
+    updateTags();
+</script>

@@ -32,6 +32,9 @@ class RecipeCategorySeeder extends Seeder
             ['name' => 'Healthy'],
             ['name' => 'Comfort Food'],
             ['name' => 'Holiday Specials'],
+            ['name' => 'Dinner'],
+            ['name' => 'Lunch'],
+            ['name' => 'Sides'],
         ]);
     }
 }

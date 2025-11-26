@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Recipe;
+use App\Models\RecipeCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
@@ -12,14 +14,14 @@ class RecipeSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('recipes')->insert([
+        $recipes = [
             [
                 'name' => 'Spaghetti Carbonara',
                 'description' => 'Classic Italian pasta dish with eggs, cheese, pancetta, and pepper.',
                 'ingredients' => "Spaghetti\nEggs\nPancetta\nParmesan cheese\nBlack pepper\nSalt",
                 'steps' => "Boil pasta.\nFry pancetta.\nMix eggs and cheese.\nCombine everything.",
                 'user_id' => 2,
-                'category_id' => 1,
+                'categories' => ['Pasta', 'Dinner', 'Comfort Food'],
                 'image_path' => 'demo/carbonara.jpg',
             ],
             [
@@ -28,7 +30,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Pizza dough\nTomato sauce\nMozzarella cheese\nFresh basil\nOlive oil",
                 'steps' => "Roll out dough.\nSpread sauce.\nAdd cheese and basil.\nBake at 220°C for 10-12 mins.",
                 'user_id' => 2,
-                'category_id' => 2,
+                'categories' => ['Pizza', 'Dinner', 'Vegetarian'],
                 'image_path' => 'demo/margherita.jpg',
             ],
             [
@@ -37,7 +39,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Romaine lettuce\nCroutons\nParmesan cheese\nCaesar dressing\nBlack pepper",
                 'steps' => "Chop lettuce.\nAdd croutons and Parmesan.\nDrizzle dressing and mix.",
                 'user_id' => 2,
-                'category_id' => 3,
+                'categories' => ['Salad', 'Lunch', 'Sides'],
                 'image_path' => 'demo/caesar.jpg',
             ],
             [
@@ -46,7 +48,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Onions\nBeef broth\nButter\nFrench bread\nGruyère cheese",
                 'steps' => "Caramelize onions.\nAdd broth and simmer.\nTop with bread and cheese, then broil.",
                 'user_id' => 2,
-                'category_id' => 4,
+                'categories' => ['Soup', 'Comfort Food', 'Dinner'],
                 'image_path' => 'demo/french_onion.jpg',
             ],
             [
@@ -55,7 +57,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Chicken\nYogurt\nTomato sauce\nCream\nGaram masala\nGarlic\nGinger",
                 'steps' => "Marinate chicken.\nGrill chicken.\nCook sauce.\nCombine and simmer.",
                 'user_id' => 2,
-                'category_id' => 5,
+                'categories' => ['Indian', 'Dinner', 'Comfort Food'],
                 'image_path' => 'demo/tikka_masala.jpg',
             ],
             [
@@ -64,7 +66,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Flour\nCocoa powder\nSugar\nEggs\nButter\nBaking powder\nMilk",
                 'steps' => "Mix ingredients.\nBake at 180°C for 30-35 mins.\nLet cool and frost.",
                 'user_id' => 2,
-                'category_id' => 6,
+                'categories' => ['Dessert', 'Comfort Food'],
                 'image_path' => 'demo/chocolate_cake.jpg',
             ],
             [
@@ -73,7 +75,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Cucumber\nTomatoes\nRed onion\nFeta cheese\nOlives\nOlive oil\nOregano",
                 'steps' => "Chop vegetables.\nMix in feta and olives.\nDrizzle with olive oil and oregano.",
                 'user_id' => 2,
-                'category_id' => 3,
+                'categories' => ['Salad', 'Lunch', 'Healthy', 'Vegetarian'],
                 'image_path' => 'demo/greek_salad.jpg',
             ],
             [
@@ -82,7 +84,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Beef strips\nMushrooms\nOnion\nSour cream\nGarlic\nPaprika\nEgg noodles",
                 'steps' => "Sauté beef and onions.\nAdd mushrooms and cook.\nStir in sour cream and season.\nServe over egg noodles.",
                 'user_id' => 2,
-                'category_id' => 1,
+                'categories' => ['Pasta', 'Dinner', 'Comfort Food'],
                 'image_path' => 'demo/beef_stroganoff.jpg',
             ],
             [
@@ -91,7 +93,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Flour\nMilk\nEggs\nBaking powder\nSugar\nButter",
                 'steps' => "Mix batter.\nCook on a skillet.\nFlip and cook other side.\nServe with toppings.",
                 'user_id' => 2,
-                'category_id' => 6,
+                'categories' => ['Breakfast', 'Dessert', 'Comfort Food'],
                 'image_path' => 'demo/pancakes.jpg',
             ],
             [
@@ -100,7 +102,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Tomatoes\nGarlic\nOnion\nBasil\nVegetable broth\nCream",
                 'steps' => "Sauté garlic and onion.\nAdd tomatoes and broth.\nBlend until smooth.\nStir in cream and basil.",
                 'user_id' => 2,
-                'category_id' => 4,
+                'categories' => ['Soup', 'Vegetarian', 'Comfort Food'],
                 'image_path' => 'demo/tomato_soup.jpg',
             ],
             [
@@ -109,7 +111,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Shrimp\nGarlic\nButter\nLemon juice\nParsley",
                 'steps' => "Sauté garlic in butter.\nAdd shrimp and cook.\nDrizzle with lemon juice.\nGarnish with parsley.",
                 'user_id' => 2,
-                'category_id' => 5,
+                'categories' => ['Seafood', 'Dinner', 'Appetizer'],
                 'image_path' => 'demo/garlic_shrimp.jpg',
             ],
             [
@@ -118,7 +120,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Avocados\nLime juice\nOnion\nTomato\nCilantro\nSalt",
                 'steps' => "Mash avocados.\nStir in lime juice and seasonings.\nMix in chopped onion and tomato.",
                 'user_id' => 2,
-                'category_id' => 3,
+                'categories' => ['Mexican', 'Vegan', 'Healthy', 'Sides'],
                 'image_path' => 'demo/guacamole.jpeg',
             ],
             [
@@ -127,7 +129,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Lasagna noodles\nGround beef\nTomato sauce\nRicotta cheese\nMozzarella\nParmesan",
                 'steps' => "Cook meat sauce.\nLayer noodles, sauce, and cheese.\nBake until bubbly.",
                 'user_id' => 2,
-                'category_id' => 1,
+                'categories' => ['Pasta', 'Dinner', 'Comfort Food'],
                 'image_path' => 'demo/lasagna.jpg',
             ],
             [
@@ -136,7 +138,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Eggs\nMilk\nCheese\nVegetables\nSalt\nPepper",
                 'steps' => "Whisk eggs and milk.\nPour into a pan and cook.\nAdd fillings and fold.",
                 'user_id' => 2,
-                'category_id' => 6,
+                'categories' => ['Breakfast', 'Lunch', 'Healthy'],
                 'image_path' => 'demo/omelette.jpg',
             ],
             [
@@ -145,7 +147,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Tomatoes\nMozzarella cheese\nFresh basil\nOlive oil\nBalsamic glaze\nSalt\nPepper",
                 'steps' => "Slice tomatoes and mozzarella.\nLayer with basil leaves.\nDrizzle with olive oil and balsamic glaze.\nSeason with salt and pepper.",
                 'user_id' => 2,
-                'category_id' => 3,
+                'categories' => ['Salad', 'Sides', 'Vegetarian', 'Healthy'],
                 'image_path' => 'demo/caprese_salad.jpeg',
             ],
             [
@@ -154,7 +156,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Bell peppers\nGround beef\nRice\nTomato sauce\nOnion\nGarlic\nCheese",
                 'steps' => "Cut and hollow out peppers.\nMix filling ingredients.\nStuff peppers and bake until tender.",
                 'user_id' => 2,
-                'category_id' => 1,
+                'categories' => ['Dinner', 'Comfort Food'],
                 'image_path' => 'demo/stuffed_peppers.avif',
             ],
             [
@@ -163,7 +165,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Chicken breast\nFettuccine pasta\nHeavy cream\nParmesan cheese\nGarlic\nButter\nSalt\nPepper",
                 'steps' => "Cook pasta.\nGrill chicken and slice.\nPrepare Alfredo sauce.\nMix everything together.",
                 'user_id' => 2,
-                'category_id' => 1,
+                'categories' => ['Pasta', 'Dinner', 'Comfort Food'],
                 'image_path' => 'demo/chicken_alfredo.jpg',
             ],
             [
@@ -172,7 +174,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Onion\nGarlic\nCarrots\nCelery\nTomatoes\nBeans\nPasta\nVegetable broth\nItalian seasoning",
                 'steps' => "Sauté vegetables.\nAdd broth and beans.\nSimmer and add pasta.\nSeason to taste.",
                 'user_id' => 2,
-                'category_id' => 4,
+                'categories' => ['Soup', 'Vegetarian', 'Healthy'],
                 'image_path' => 'demo/minestrone.jpg',
             ],
             [
@@ -181,7 +183,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Chicken thighs\nSoy sauce\nHoney\nGarlic\nGinger\nSesame seeds\nGreen onions",
                 'steps' => "Marinate chicken in sauce.\nCook in a pan or grill.\nGarnish with sesame seeds and green onions.",
                 'user_id' => 2,
-                'category_id' => 5,
+                'categories' => ['Asian', 'Dinner', 'Grill & BBQ'],
                 'image_path' => 'demo/teriyaki_chicken.jpg',
             ],
             [
@@ -190,7 +192,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Apples\nPie crust\nSugar\nCinnamon\nButter\nLemon juice",
                 'steps' => "Prepare the crust.\nMix apple filling.\nAssemble pie and bake.\nLet cool before serving.",
                 'user_id' => 2,
-                'category_id' => 6,
+                'categories' => ['Dessert', 'Comfort Food', 'Holiday Specials'],
                 'image_path' => 'demo/apple_pie.jpg',
             ],
             [
@@ -199,7 +201,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Ground beef\nBeans\nTomato sauce\nOnion\nGarlic\nChili powder\nCumin",
                 'steps' => "Cook beef and onions.\nAdd beans and seasonings.\nSimmer until thick and flavorful.",
                 'user_id' => 2,
-                'category_id' => 1,
+                'categories' => ['Soup', 'Dinner', 'Comfort Food'],
                 'image_path' => 'demo/chili_con_carne.jpg',
             ],
             [
@@ -208,7 +210,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Baguette\nButter\nGarlic\nParsley\nParmesan cheese",
                 'steps' => "Slice baguette.\nMix butter and garlic.\nSpread on bread and bake.",
                 'user_id' => 2,
-                'category_id' => 6,
+                'categories' => ['Sides', 'Comfort Food'],
                 'image_path' => 'demo/garlic_bread.jpg',
             ],
             [
@@ -217,7 +219,7 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Pork\nPineapple\nChili powder\nCumin\nGarlic\nCorn tortillas\nOnion\nCilantro",
                 'steps' => "Marinate pork.\nGrill and slice.\nServe in tortillas with toppings.",
                 'user_id' => 2,
-                'category_id' => 5,
+                'categories' => ['Mexican', 'Dinner', 'Fast Food'],
                 'image_path' => 'demo/tacos_al_pastor.jpeg',
             ],
             [
@@ -226,9 +228,24 @@ class RecipeSeeder extends Seeder
                 'ingredients' => "Clams\nPotatoes\nBacon\nOnion\nCelery\nHeavy cream\nButter",
                 'steps' => "Cook bacon and vegetables.\nAdd clams and cream.\nSimmer until thick.",
                 'user_id' => 2,
-                'category_id' => 4,
+                'categories' => ['Soup', 'Seafood', 'Comfort Food'],
                 'image_path' => 'demo/clam_chowder.jpg',
             ],
-        ]);
+        ];
+
+        foreach ($recipes as $data) {
+            $recipe = Recipe::create([
+                'name' => $data['name'],
+                'description' => $data['description'],
+                'ingredients' => $data['ingredients'],
+                'steps' => $data['steps'],
+                'user_id' => $data['user_id'],
+                'image_path' => $data['image_path'],
+            ]);
+
+            // Attach categories by name (convert to IDs)
+            $categoryIds = RecipeCategory::whereIn('name', $data['categories'])->pluck('id');
+            $recipe->categories()->sync($categoryIds);
+        }
     }
 }

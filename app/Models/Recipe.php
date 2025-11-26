@@ -20,8 +20,8 @@ class Recipe extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function category() {
-        return $this->belongsTo(RecipeCategory::class);
+    public function categories() {
+        return $this->belongsToMany(RecipeCategory::class, 'recipe_recipe_category', 'recipe_id', 'recipe_category_id');
     }
 
     public function ratings() {
