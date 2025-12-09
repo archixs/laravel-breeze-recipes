@@ -16,15 +16,34 @@ class ChatController extends Controller
             $apiKey = env('GEMINI_API_KEY');
             $userMessage = $request->post('content');
 
-            // Load recipes
-            $recipes = Recipe::select('id', 'title', 'ingredients')->get();
+            // Load only recipes user is allowed to see
+            $query = Recipe::select('id', 'name', 'ingredients');
+
+            if (auth()->check()) {
+                $query->where(function ($q) {
+                    $q->where('is_public', true)
+                    ->orWhere('user_id', auth()->id());
+                });
+            } else {
+                $query->where('is_public', true);
+            }
+
+            $recipes = $query->get();
+
+            // If no recipes available, short-circuit
+            if ($recipes->isEmpty()) {
+                return response()->json([
+                    'response' => "No recipes available for your query yet.",
+                    'recipe' => null,
+                ]);
+            }
 
             // Build prompt
             $prompt = "You are a recipe assistant.\n";
             $prompt .= "Here is the list of recipes with IDs:\n\n";
 
             foreach ($recipes as $rec) {
-                $prompt .= "{$rec->id}: {$rec->title}\nIngredients: {$rec->ingredients}\n\n";
+                $prompt .= "{$rec->id}: {$rec->name}\nIngredients: {$rec->ingredients}\n\n";
             }
 
             $prompt .= "User asked: \"{$userMessage}\"\n";
@@ -43,7 +62,20 @@ class ChatController extends Controller
 
             // Convert response to integer ID
             $recipeId = intval($aiText);
-            $recipe = Recipe::find($recipeId);
+
+            // Enforce visibility again
+            $recipeQuery = Recipe::query();
+
+            if (auth()->check()) {
+                $recipeQuery->where(function ($q) {
+                    $q->where('is_public', true)
+                    ->orWhere('user_id', auth()->id());
+                });
+            } else {
+                $recipeQuery->where('is_public', true);
+            }
+
+            $recipe = $recipeQuery->find($recipeId);
 
             return response()->json([
                 'response' => "Here is the best match!",
