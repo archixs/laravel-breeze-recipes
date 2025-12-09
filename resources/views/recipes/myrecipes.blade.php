@@ -8,7 +8,7 @@
                     @foreach ($recipes as $recipe)
                         <div class="relative overflow-hidden rounded-lg shadow-lg 
                             {{ $loop->index % 6 == 0 ? 'col-span-2 row-span-2' : 'col-span-1 row-span-1' }}">
-                            <a href="{{ route('show', $recipe->id) }}">
+                            <a href="{{ route('show', ['id' => $recipe->id, 'redirect' => 'myrecipes']) }}">
                                 <img src="{{ Storage::url($recipe->image_path) }}" class="w-full h-full object-cover">
                             </a>
                             <div class="absolute bottom-0 bg-black bg-opacity-50 text-white p-2 w-full text-center">

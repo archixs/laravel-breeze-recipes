@@ -67,19 +67,24 @@
                     </ol>
                 </div>
 
+                @php
+                    $redirect = request('redirect', 'index');
+                @endphp
+
                 <!-- Buttons -->
                 <div class="mt-6 flex space-x-4">
                     @if(auth()->user()->usertype === 'admin' || $recipe->user_id === auth()->user()->id)
-                        <a href="{{ route('edit', $recipe->id) }}" class="px-4 py-2 bg-yellow-500 text-white rounded">Edit</a>
+                        <a href="{{ route('edit', ['id' => $recipe->id, 'redirect' => $redirect]) }}" class="px-4 py-2 bg-yellow-500 text-white rounded">Edit</a>
 
-                        <form action="{{ route('delete', $recipe->id) }}" method="POST" >
+                        <form action="{{ route('delete', ['id' => $recipe->id, 'redirect' => $redirect]) }}" method="POST" >
                             @csrf
                             @method('DELETE')
+                            <input type="hidden" name="redirect" value="{{ $redirect }}">
                             <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded">Delete</button>
                         </form>
                     @endif
 
-                    <a href="{{ url()->previous() }}" class="px-4 py-2 bg-blue-500 text-white rounded">Back</a>
+                    <a href="{{ route($redirect) }}" class="px-4 py-2 bg-blue-500 text-white rounded">Back</a>
                 </div>
             </div>
         </div>

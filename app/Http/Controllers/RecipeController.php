@@ -53,7 +53,7 @@ class RecipeController extends Controller
         ) {
             abort(403);
         }
-        
+
         $recipe->user_rating = $recipe->ratings()->where('user_id', auth()->id())->value('rating') ?? 0;
         $recipe->average_rating = $recipe->ratings()->avg('rating') ?? 0;
         return view('recipes.show', ['recipe' => $recipe]);
@@ -145,10 +145,12 @@ class RecipeController extends Controller
 
         $recipe->categories()->sync($categories);
 
-        return redirect()->route('show', $recipe->id)->with('success', 'Recipe updated successfully!');
+        $redirect = $request->input('redirect', 'index');
+        
+        return redirect()->route('show', ['id' => $recipe->id, 'redirect' => $redirect])->with('success', 'Recipe updated successfully!');
     }
 
-    public function destroy($id) {
+    public function destroy(Request $request, $id) {
         $recipe = Recipe::findOrFail($id);
         
         try {
@@ -156,9 +158,11 @@ class RecipeController extends Controller
                 Storage::disk('public')->delete($recipe->image_path);
             }
             $recipe->delete();
-            return redirect()->route('index')->with('success', 'Recipe deleted successfully!');
+            $redirect = $request->input('redirect', 'index');
+            return redirect()->route($redirect)->with('success', 'Recipe deleted successfully!');
         } catch (\Exception $e) {
-            return redirect()->route('index')->withErrors(['error' => 'Failed to delete recipe. Please try again.']);
+            $redirect = $request->input('redirect', 'index');
+            return redirect()->route($redirect)->withErrors(['error' => 'Failed to delete recipe. Please try again.']);
         }
     }
 

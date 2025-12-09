@@ -2,7 +2,7 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-6 text-center text-green-600" :status="session('status')" />
 
-    <a href="{{ url()->previous() }}" class="text-sm text-gray-600 hover:text-gray-800 mb-4 inline-flex items-center gap-1 transition">
+    <a href="{{ route('index') }}" class="text-sm text-gray-600 hover:text-gray-800 mb-4 inline-flex items-center gap-1 transition">
         ← {{ __('Back') }}
     </a>
     

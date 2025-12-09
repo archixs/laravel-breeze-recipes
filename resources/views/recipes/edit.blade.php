@@ -10,7 +10,11 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <h2 class="text-2xl font-bold text-gray-800">Edit Recipe</h2>
 
-                <form action="{{ route('update', $recipe->id) }}" method="POST" enctype="multipart/form-data" class="mt-6">
+                @php
+                    $redirect = request('redirect', 'index');
+                @endphp
+
+                <form action="{{ route('update', ['id' => $recipe->id, 'redirect' => $redirect]) }}" method="POST" enctype="multipart/form-data" class="mt-6">
                     @csrf
                     @method('PUT')
                     
@@ -91,8 +95,9 @@
                     </div>
                     
                     <div class="mt-6 flex space-x-4">
+                        <input type="hidden" name="redirect" value="{{ $redirect }}">
                         <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Save changes</button>
-                        <a href="{{ route('show', $recipe->id) }}" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</a>
+                        <a href="{{ route('show', ['id' => $recipe->id, 'redirect' => $redirect]) }}" class="px-4 py-2 bg-gray-500 text-white rounded">Cancel</a>
                     </div>
                 </form>
             </div>

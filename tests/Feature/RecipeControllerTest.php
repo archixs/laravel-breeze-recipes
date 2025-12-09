@@ -126,7 +126,7 @@ test('user can update a recipe from seeded data', function () {
         'steps' => 'New Steps',
     ]);
 
-    $response->assertRedirect(route('show', $this->recipe->id));
+    $response->assertRedirect(route('show', ['id' => $this->recipe->id, 'redirect' => 'index']));
     $this->assertDatabaseHas('recipes', ['name' => 'Updated Seed Recipe']);
 });
 
