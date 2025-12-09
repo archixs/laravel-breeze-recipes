@@ -2,7 +2,16 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 pb-6">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-6 px-6 pt-2">
             @if ($recipes->isEmpty())
-                <p class="text-gray-500">You haven't added any recipes yet.</p>
+                <p class="text-gray-500 mt-4">You haven't added any recipes yet.</p>
+
+                <a href="{{ route('create') }}" 
+                   class="inline-block mt-4 text-white px-4 py-2 rounded bg-blue-500">
+                    Create a Recipe
+                </a>
+
+                <form action="{{ route('index') }}" method="get" class="mt-4 mb-6">
+                    <button class="text-white px-4 py-2 rounded bg-gray-500">Back</button>
+                </form>
             @else
                 <div class="grid grid-cols-3 gap-2 md:gap-4 auto-rows-[200px] md:auto-rows-[250px] mt-4">
                     @foreach ($recipes as $recipe)
@@ -16,7 +25,6 @@
                             </div>
                         </div>
                     @endforeach
-
                 </div>
 
                 <div class="mt-6">
