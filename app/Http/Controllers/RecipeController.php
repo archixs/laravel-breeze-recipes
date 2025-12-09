@@ -25,6 +25,15 @@ class RecipeController extends Controller
             });
         }
     
+        if (auth()->check()) {
+            $query->where(function ($q) {
+                $q->where('is_public', true)
+                ->orWhere('user_id', auth()->id());
+            });
+        } else {
+            $query->where('is_public', true);
+        }
+
         $recipes = $query->paginate(9);
 
         return view('recipes.index', ['recipes' => $recipes]);
@@ -37,6 +46,14 @@ class RecipeController extends Controller
 
     public function show($id) {
         $recipe = Recipe::with(['user', 'categories'])->findOrFail($id);
+
+        $user = auth()->user();
+        if (!$recipe->is_public &&
+            (! $user || ($user->id !== $recipe->user_id && $user->usertype !== 'admin'))
+        ) {
+            abort(403);
+        }
+        
         $recipe->user_rating = $recipe->ratings()->where('user_id', auth()->id())->value('rating') ?? 0;
         $recipe->average_rating = $recipe->ratings()->avg('rating') ?? 0;
         return view('recipes.show', ['recipe' => $recipe]);
@@ -78,7 +95,8 @@ class RecipeController extends Controller
             'description' => $request->description,
             'image_path' => $path,
             'ingredients' => $request->ingredients,
-            'steps' => $request->steps
+            'steps' => $request->steps,
+            'is_public' => $request->input('is_public', 1),
         ]);
 
         $categories = is_string($request->categories) ? json_decode($request->categories, true) : $request->categories;
@@ -119,7 +137,8 @@ class RecipeController extends Controller
             'description' => $request->description,
             'ingredients' => $request->ingredients,
             'steps' => $request->steps,
-            'image_path' => $path
+            'image_path' => $path,
+            'is_public' => $request->input('is_public', $recipe->is_public),
         ]);
 
         $categories = is_string($request->categories) ? json_decode($request->categories, true) : $request->categories;

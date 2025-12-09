@@ -15,12 +15,12 @@
                     
                     <div>
                         <label for="name" class="block text-gray-700">Name</label>
-                        <input type="text" name="name" id="name" required class="w-full border-gray-300 rounded-lg p-2">
+                        <input type="text" name="name" id="name" required class="w-full border border-gray-300 rounded-lg p-2">
                     </div>
 
                     <div>
                         <label for="description" class="block text-gray-700">Description</label>
-                        <textarea name="description" id="description" rows="3" required class="w-full border-gray-300 rounded-lg p-2"></textarea>
+                        <textarea name="description" id="description" rows="3" required class="w-full border border-gray-300 rounded-lg p-2"></textarea>
                     </div>
 
                     <div id="category-wrapper" class="mb-4">
@@ -31,7 +31,7 @@
 
                         <!-- The dropdown -->
                         <select id="categorySelect"
-                                class="w-full border-gray-300 rounded-lg p-2">
+                                class="w-full border border-gray-300 rounded-lg p-2">
                             <option value="">Select category…</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -42,20 +42,43 @@
                         <div id="categoryTags" class="flex flex-wrap gap-2 mt-3"></div>
                     </div>
 
-
                     <div>
                         <label for="ingredients" class="block text-gray-700">Ingredients</label>
-                        <textarea name="ingredients" id="ingredients" rows="4" required class="w-full border-gray-300 rounded-lg p-2" placeholder="List ingredients separated by a new line..."></textarea>
+                        <textarea name="ingredients" id="ingredients" rows="4" required class="w-full border border-gray-300 rounded-lg p-2" placeholder="List ingredients separated by a new line..."></textarea>
                     </div>
 
                     <div>
                         <label for="steps" class="block text-gray-700">Steps</label>
-                        <textarea name="steps" id="steps" rows="4" required class="w-full border-gray-300 rounded-lg p-2" placeholder="Write step-by-step instructions..."></textarea>
+                        <textarea name="steps" id="steps" rows="4" required class="w-full border border-gray-300 rounded-lg p-2" placeholder="Write step-by-step instructions..."></textarea>
+                    </div>
+
+                    {{-- Visibility toggle --}}
+                    <div>
+                        <span class="block text-gray-700">Visibility</span>
+                        <div class="mt-2 flex items-center space-x-6">
+                            <label class="inline-flex items-center">
+                                <input type="radio"
+                                       name="is_public"
+                                       value="1"
+                                       class="text-blue-500 focus:ring-blue-500"
+                                       {{ old('is_public', 1) ? 'checked' : '' }}>
+                                <span class="ml-2 text-gray-700">Public</span>
+                            </label>
+
+                            <label class="inline-flex items-center">
+                                <input type="radio"
+                                       name="is_public"
+                                       value="0"
+                                       class="text-blue-500 focus:ring-blue-500"
+                                       {{ old('is_public', 1) ? '' : 'checked' }}>
+                                <span class="ml-2 text-gray-700">Private</span>
+                            </label>
+                        </div>
                     </div>
 
                     <div>
                         <label for="image" class="block text-gray-700">Image</label>
-                        <input type="file" name="image" id="image" class="w-full border-gray-300 rounded-lg p-2">
+                        <input type="file" name="image" id="image" class="w-full border border-gray-300 rounded-lg p-2">
                     </div>
 
                     <button type="submit" class="text-white px-4 py-2 rounded-lg bg-blue-500">Save Recipe</button>
@@ -117,4 +140,3 @@
         });
     }
 </script>
-

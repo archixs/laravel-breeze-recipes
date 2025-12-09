@@ -33,7 +33,7 @@
                         <input type="hidden" name="categories" id="categoriesInput">
 
                         <!-- The dropdown -->
-                        <select id="categorySelect" class="w-full border-gray-300 rounded-lg p-2">
+                        <select id="categorySelect" class="w-full border border-gray-300 rounded-lg p-2">
                             <option value="">Select category…</option>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -54,6 +54,30 @@
                         <label for="steps" class="block text-gray-700">Steps</label>
                         <textarea name="steps" id="steps" 
                                   class="w-full p-2 border border-gray-300 rounded mt-1" required>{{ $recipe->steps }}</textarea>
+                    </div>
+
+                    {{-- Visibility toggle --}}
+                    <div class="mb-4">
+                        <span class="block text-gray-700">Visibility</span>
+                        <div class="mt-2 flex items-center space-x-6">
+                            <label class="inline-flex items-center">
+                                <input type="radio"
+                                       name="is_public"
+                                       value="1"
+                                       class="text-blue-500 focus:ring-blue-500"
+                                       {{ old('is_public', $recipe->is_public) ? 'checked' : '' }}>
+                                <span class="ml-2 text-gray-700">Public</span>
+                            </label>
+
+                            <label class="inline-flex items-center">
+                                <input type="radio"
+                                       name="is_public"
+                                       value="0"
+                                       class="text-blue-500 focus:ring-blue-500"
+                                       {{ old('is_public', $recipe->is_public) ? '' : 'checked' }}>
+                                <span class="ml-2 text-gray-700">Private</span>
+                            </label>
+                        </div>
                     </div>
 
                     <div class="mb-4">
