@@ -69,7 +69,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
-                        <div x-show="menu" @click.away="menu = false" x-transition
+                        <div x-show="menu" x-cloak @click.away="menu = false" x-transition
                              class="absolute right-0 mt-2 w-44 bg-white shadow-xl rounded-xl overflow-hidden z-50">
                             <a href="{{ route('profile.edit') }}" class="block px-4 py-2 hover:bg-gray-50 text-gray-700 text-sm">Profile</a>
                             <form method="POST" action="{{ route('logout') }}">
