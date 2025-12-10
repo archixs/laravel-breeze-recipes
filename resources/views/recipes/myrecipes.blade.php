@@ -4,7 +4,7 @@
             @if ($recipes->isEmpty())
                 <p class="text-gray-500 mt-4">You haven't added any recipes yet.</p>
 
-                <a href="{{ route('create') }}" 
+                <a href="{{ route('create', ['redirect' => 'myrecipes']) }}" 
                    class="inline-block mt-4 text-white px-4 py-2 rounded bg-blue-500">
                     Create a Recipe
                 </a>

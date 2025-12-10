@@ -19,7 +19,7 @@
                 {{ $recipes->links() }}
             </div>
             
-            <form action="/recipe/create" method="get" class="mt-6 mb-6">
+            <form action="{{ route('create', ['redirect' => 'index']) }}" method="get" class="mt-6 mb-6">
                 <button class="text-white px-4 py-2 rounded bg-blue-500">Make Recipe</button>
             </form>
         </div>
