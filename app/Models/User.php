@@ -12,6 +12,9 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    public const TYPE_ADMIN = 'admin';
+    public const TYPE_USER = 'user';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -53,5 +56,15 @@ class User extends Authenticatable
 
     public function ratings() {
         return $this->hasMany(Rating::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->usertype === self::TYPE_ADMIN;
+    }
+
+    public function canManageRecipe(Recipe $recipe): bool
+    {
+        return $this->isAdmin() || $recipe->user_id === $this->id;
     }
 }

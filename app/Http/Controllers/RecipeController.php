@@ -5,186 +5,143 @@ namespace App\Http\Controllers;
 use App\Models\Rating;
 use App\Models\Recipe;
 use App\Models\RecipeCategory;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class RecipeController extends Controller
 {
-    public function index(Request $request){
-        $query = Recipe::query();
-        
-        // Filter by search
-        if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
-        }
+    public function index(Request $request)
+    {
+        $recipes = Recipe::query()
+            ->search($request->input('search'))
+            ->inCategories((array) $request->input('category', []))
+            ->visibleTo($request->user())
+            ->paginate(9);
 
-        // Filter by category
-        if ($request->has('category') && !empty($request->category)) {
-            $query->whereHas('categories', function ($q) use ($request) {
-                $q->whereIn('recipe_categories.id', (array)$request->category);
-            });
-        }
-    
-        if (auth()->check()) {
-            $query->where(function ($q) {
-                $q->where('is_public', true)
-                ->orWhere('user_id', auth()->id());
-            });
-        } else {
-            $query->where('is_public', true);
-        }
-
-        $recipes = $query->paginate(9);
-
-        return view('recipes.index', ['recipes' => $recipes]);
+        return view('recipes.index', compact('recipes'));
     }
 
-    public function create() {
+    public function create()
+    {
         $categories = RecipeCategory::all();
-        return view('recipes.create', ['categories' => $categories]);
+        return view('recipes.create', compact('categories'));
     }
 
-    public function show($id) {
+    public function show($id)
+    {
         $recipe = Recipe::with(['user', 'categories'])->findOrFail($id);
 
-        $user = auth()->user();
-        if (!$recipe->is_public &&
-            (! $user || ($user->id !== $recipe->user_id && $user->usertype !== 'admin'))
-        ) {
+        if (! $recipe->canBeViewedBy(auth()->user())) {
             abort(403);
         }
 
-        $recipe->user_rating = $recipe->ratings()->where('user_id', auth()->id())->value('rating') ?? 0;
-        $recipe->average_rating = $recipe->ratings()->avg('rating') ?? 0;
-        return view('recipes.show', ['recipe' => $recipe]);
+        $recipe->user_rating = $recipe->userRating(auth()->user());
+        $recipe->average_rating = $recipe->averageRating();
+
+        return view('recipes.show', compact('recipe'));
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $recipe = Recipe::findOrFail($id);
         $categories = RecipeCategory::all();
-        return view('recipes.edit', ['recipe' => $recipe, 'categories' => $categories]);
+
+        return view('recipes.edit', compact('recipe', 'categories'));
     }
 
-    public function myrecipes() {
+    public function myrecipes()
+    {
         $recipes = auth()->user()->recipes()->paginate(9);
-        return view('recipes.myrecipes', ['recipes' => $recipes]);
+        return view('recipes.myrecipes', compact('recipes'));
     }
 
-    public function save(Request $request){
-        $request->validate([
+    public function save(Request $request)
+    {
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
+            'ingredients' => 'required|string',
+            'steps' => 'required|string',
             'categories' => 'required',
-            'ingredients' => 'required|string',
-            'steps' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_public' => 'nullable|boolean',
         ]);
 
-        if ($request->hasFile('image')) {
-            try {
-                $path = $request->file('image')->store('images', 'public');
-            } catch (\Exception $e) {
-                return back()->withErrors(['image' => 'Failed to upload image. Please try again.']);
-            }
-        } else {
-            $path = null;
-        }
+        Recipe::createFromRequest(
+            $request->user(),
+            $validated,
+            $request->file('image')
+        );
 
-        $recipe = $request->user()->recipes()->create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'image_path' => $path,
-            'ingredients' => $request->ingredients,
-            'steps' => $request->steps,
-            'is_public' => $request->input('is_public', 1),
-        ]);
+        $redirect = $request->input('redirect', 'index');
 
-        $categories = is_string($request->categories) ? json_decode($request->categories, true) : $request->categories;
-
-        $recipe->categories()->sync($categories);   
-
-        return redirect()->route('index')->with('success', 'Recipe created successfully!');
+        return redirect()->route($redirect)
+            ->with('success', 'Recipe created successfully!');
     }
 
-    public function update(Request $request, $id){
-        $request->validate([
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'categories' => 'required', // JSON list
             'ingredients' => 'required|string',
             'steps' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'categories' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_public' => 'nullable|boolean',
         ]);
 
         $recipe = Recipe::findOrFail($id);
 
-        if ($request->hasFile('image')) {
-            try {
-                if ($recipe->image_path) {
-                    Storage::disk('public')->delete($recipe->image_path);
-                }
-                $path = $request->file('image')->store('images', 'public');
-            } catch (\Exception $e) {
-                return back()->withErrors(['image' => 'Failed to upload image. Please try again.']);
-            }
-        } else {
-            $path = $recipe->image_path;
-        }
-
-        // Update recipe
-        $recipe->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'ingredients' => $request->ingredients,
-            'steps' => $request->steps,
-            'image_path' => $path,
-            'is_public' => $request->input('is_public', $recipe->is_public),
-        ]);
-
-        $categories = is_string($request->categories) ? json_decode($request->categories, true) : $request->categories;
-
-        $recipe->categories()->sync($categories);
+        $recipe->updateFromRequest(
+            $validated,
+            $request->file('image')
+        );
 
         $redirect = $request->input('redirect', 'index');
-        
+
         return redirect()->route('show', ['id' => $recipe->id, 'redirect' => $redirect])->with('success', 'Recipe updated successfully!');
     }
 
-    public function destroy(Request $request, $id) {
+    public function destroy(Request $request, $id)
+    {
         $recipe = Recipe::findOrFail($id);
-        
+
+        $redirect = $request->input('redirect', 'index');
+
         try {
-            if ($recipe->image_path) {
-                Storage::disk('public')->delete($recipe->image_path);
-            }
-            $recipe->delete();
-            $redirect = $request->input('redirect', 'index');
-            return redirect()->route($redirect)->with('success', 'Recipe deleted successfully!');
+            $recipe->deleteWithImage();
+
+            return redirect()
+                ->route($redirect)
+                ->with('success', 'Recipe deleted successfully!');
         } catch (\Exception $e) {
-            $redirect = $request->input('redirect', 'index');
-            return redirect()->route($redirect)->withErrors(['error' => 'Failed to delete recipe. Please try again.']);
+            return redirect()
+                ->route($redirect)
+                ->withErrors([
+                    'error' => 'Failed to delete recipe. Please try again.'
+                ]);
         }
     }
 
+
     public function rate(Request $request, Recipe $recipe)
     {
-        $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
+        $validated = $request->validate([
+            'rating' => 'required|integer|min:' . Rating::MIN . '|max:' . Rating::MAX,
         ]);
 
-        // Save or update the rating
-        $recipe->ratings()->updateOrCreate(
-            ['user_id' => auth()->id()], 
-            ['rating' => $request->rating]
+        $average = $recipe->rateBy(
+            $request->user(),
+            (int) $validated['rating']
         );
 
-        // Recalculate the average rating
-        $average = $recipe->ratings()->avg('rating');
-
-        return response()->json(['average_rating' => round($average, 1)]);
+        return response()->json([
+            'average_rating' => round($average, 1),
+        ]);
     }
 
-    public function toAI() {
+    public function toAI()
+    {
         return view('recipes.ai-page');
     }
 }

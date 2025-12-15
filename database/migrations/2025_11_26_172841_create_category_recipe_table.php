@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('recipe_recipe_category', function (Blueprint $table) {
-            $table->id();
             $table->foreignId('recipe_id')->constrained()->cascadeOnDelete();
             $table->foreignId('recipe_category_id')->constrained()->cascadeOnDelete();
+            $table->primary(['recipe_id', 'recipe_category_id']);
         });
     }
 
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('category_recipe');
+        Schema::dropIfExists('recipe_recipe_category');
     }
 };

@@ -16,7 +16,8 @@
 
                 <form action="/" method="POST" enctype="multipart/form-data" class="mt-4 space-y-4">
                     @csrf
-                    
+                    <input type="hidden" name="redirect" value="{{ $redirect }}">
+
                     <div>
                         <label for="name" class="block text-gray-700">Name</label>
                         <input type="text" name="name" id="name" required class="w-full border border-gray-300 rounded-lg p-2">

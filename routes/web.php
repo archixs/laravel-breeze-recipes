@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    return redirect()->route('index');
+})->name('dashboard');
 
 Route::get('/', [RecipeController::class, 'index'])->name('index');
 

@@ -1,17 +1,22 @@
 <x-app-layout>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 pb-6">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-6 px-6 pt-2">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-6 px-6 pt-2 min-h-[70vh] flex flex-col">
+            
             @if ($recipes->isEmpty())
                 <p class="text-gray-500 mt-4">You haven't added any recipes yet.</p>
 
-                <a href="{{ route('create', ['redirect' => 'myrecipes']) }}" 
-                   class="inline-block mt-4 text-white px-4 py-2 rounded bg-blue-500">
-                    Create a Recipe
-                </a>
+                <!-- Buttons pinned to bottom -->
+                <div class="mt-auto mb-6 flex gap-4">
+                    <a href="{{ route('create', ['redirect' => 'myrecipes']) }}"
+                       class="text-white px-4 py-2 rounded bg-blue-500">
+                        Create a Recipe
+                    </a>
 
-                <form action="{{ route('index') }}" method="get" class="mt-4 mb-6">
-                    <button class="text-white px-4 py-2 rounded bg-gray-500">Back</button>
-                </form>
+                    <a href="{{ route('index') }}"
+                       class="text-white px-4 py-2 rounded bg-gray-500">
+                        Back
+                    </a>
+                </div>
             @else
                 <div class="grid grid-cols-3 gap-2 md:gap-4 auto-rows-[200px] md:auto-rows-[250px] mt-4">
                     @foreach ($recipes as $recipe)
@@ -31,10 +36,20 @@
                     {{ $recipes->links() }}
                 </div>
 
-                <form action="/" method="get" class="mt-6 mb-6">
-                    <button class="text-white px-4 py-2 rounded bg-blue-500">Back</button>
-                </form>
+                <!-- Buttons pinned to bottom -->
+                <div class="mt-auto mb-6 flex gap-4">
+                    <a href="{{ route('create', ['redirect' => 'myrecipes']) }}"
+                       class="text-white px-4 py-2 rounded bg-blue-500">
+                        Create a Recipe
+                    </a>
+
+                    <a href="{{ route('index') }}"
+                       class="text-white px-4 py-2 rounded bg-gray-500">
+                        Back
+                    </a>
+                </div>
             @endif
+
         </div>
     </div>
 </x-app-layout>
