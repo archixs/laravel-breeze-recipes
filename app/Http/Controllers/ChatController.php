@@ -81,8 +81,11 @@ class ChatController extends Controller
             $prompt .= "{$rec->id}: {$rec->name}\nIngredients: {$rec->ingredients}\n\n";
         }
 
+        // Updated prompt logic
         $prompt .= "User asked: \"{$userMessage}\"\n";
-        $prompt .= "Choose the SINGLE best recipe and respond ONLY with the ID number. NOTHING else.";
+        $prompt .= "Think about the request carefully.\n";
+        $prompt .= "Then choose the SINGLE best recipe ID.\n";
+        $prompt .= "Respond ONLY with the ID number.";
 
         return $prompt;
     }
