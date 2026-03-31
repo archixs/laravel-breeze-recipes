@@ -45,13 +45,17 @@ npm install && npm run dev
 cp .env.example .env
 php artisan key:generate
 ```
-
-**4. Migrē datu bāzi:**
+**4. Pievieno API atslēgu (.env failā):**
 ```bash
-php artisan migrate
+GEMINI_API_KEY=your_api_key_here
 ```
 
-**5. Palaid serveri:**
+**5. Migrē datu bāzi:**
+```bash
+php artisan migrate --seed
+```
+
+**6. Palaid serveri:**
 ```bash
 php artisan serve
 ```
