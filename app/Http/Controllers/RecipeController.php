@@ -12,6 +12,7 @@ class RecipeController extends Controller
     public function index(Request $request)
     {
         $recipes = Recipe::query()
+            ->with(['user', 'categories', 'ratings'])
             ->search($request->input('search'))
             ->inCategories((array) $request->input('category', []))
             ->visibleTo($request->user())
@@ -42,15 +43,18 @@ class RecipeController extends Controller
 
     public function edit($id)
     {
-        $recipe = Recipe::findOrFail($id);
-        $categories = RecipeCategory::all();
+        $recipe = Recipe::with('categories')->findOrFail($id);
+        // $categories = RecipeCategory::all();
 
-        return view('recipes.edit', compact('recipe', 'categories'));
+        return view('recipes.edit', compact('recipe'));
     }
 
     public function myrecipes()
     {
-        $recipes = auth()->user()->recipes()->paginate(9);
+        $recipes = auth()->user()->recipes()
+            ->with('categories')
+            ->paginate(9);
+
         return view('recipes.myrecipes', compact('recipes'));
     }
 

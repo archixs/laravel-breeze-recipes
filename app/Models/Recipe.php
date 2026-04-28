@@ -88,7 +88,7 @@ class Recipe extends Model
 
     public function averageRating(): float
     {
-        return (float) ($this->ratings()->avg('rating') ?? 0);
+        return (float) ($this->ratings->avg('rating') ?? 0);
     }
 
     public function userRating(?User $user): int
