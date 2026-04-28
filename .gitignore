@@ -2,6 +2,10 @@
 /node_modules
 /public/build
 /public/hot
+/storage/app/*
+!storage/app/public/
+!storage/app/public/demo/
+!storage/app/public/demo/**
 /storage/*.key
 /storage/pail
 /vendor
