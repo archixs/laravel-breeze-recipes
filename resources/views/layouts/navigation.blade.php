@@ -10,10 +10,6 @@
 
                 <!-- Desktop Links -->
                 <div class="hidden md:flex items-center gap-6 text-[15px]">
-                    <a href="{{ route('index') }}"
-                       class="font-medium text-gray-700 hover:text-black transition {{ request()->routeIs('index') ? 'text-blue-600 font-semibold' : '' }}">
-                        Recipes
-                    </a>
                     <a href="{{ route('myrecipes') }}"
                        class="font-medium text-gray-700 hover:text-black transition {{ request()->routeIs('myrecipes') ? 'text-blue-600 font-semibold' : '' }}">
                         My Recipes

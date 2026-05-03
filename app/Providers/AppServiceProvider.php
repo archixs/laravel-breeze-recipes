@@ -4,7 +4,8 @@ namespace App\Providers;
 
 use App\Models\RecipeCategory;
 use Illuminate\Support\ServiceProvider;
-use View;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -41,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
     {
         try {
             // Check if we can connect to database and table exists
-            return \Schema::hasTable('recipe_categories');
+            return Schema::hasTable('recipe_categories');
         } catch (\Exception $e) {
             return false;
         }

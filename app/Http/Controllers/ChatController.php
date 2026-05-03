@@ -53,7 +53,6 @@ class ChatController extends Controller
 
             $recipeId = ctype_digit($aiText) ? (int) $aiText : 0;
 
-            // ✅ Same business rule reused, not duplicated
             $recipe = Recipe::query()
                 ->visibleTo($request->user())
                 ->find($recipeId);
@@ -81,7 +80,6 @@ class ChatController extends Controller
             $prompt .= "{$rec->id}: {$rec->name}\nIngredients: {$rec->ingredients}\n\n";
         }
 
-        // Updated prompt logic
         $prompt .= "User asked: \"{$userMessage}\"\n";
         $prompt .= "Think about the request carefully.\n";
         $prompt .= "Then choose the SINGLE best recipe ID.\n";
